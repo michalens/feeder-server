@@ -1,6 +1,15 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const folderSchema = new Schema({
+    title: {
+        type: String, 
+        required: true 
+    },
+    folders: [{ type: Schema.Types.ObjectId, ref: 'Folder' }],
+    feeds: [{ type: Schema.Types.ObjectId, ref: 'RSSFeed' }]
+})
+
 const rssFeedSchema = new Schema(
   	{
         feedUrl: { 
@@ -27,4 +36,9 @@ const rssFeedSchema = new Schema(
     }
 )
 
-module.exports = mongoose.model('RSSFeed', rssFeedSchema)
+const RSSFeed = mongoose.model('RSSFeed', rssFeedSchema);
+const Folder = mongoose.model('Folder', folderSchema);
+module.exports = {
+    RSSFeed,
+    Folder
+}

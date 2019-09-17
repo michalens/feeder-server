@@ -1,6 +1,6 @@
 const Parser = require('rss-parser');
 const rssParser = new Parser();
-const RSSFeed = require('../models/rss-model')
+const RSSFeed = require('../models/rss-model').RSSFeed
 
 createFeed =  async (req, res) => {
 

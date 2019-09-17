@@ -1,6 +1,7 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const cors = require('cors')
+const fileUpload = require('express-fileupload');
 
 const rssParser = require('./rss-parser.js')
 
@@ -14,6 +15,7 @@ const apiPort = 3000
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.use(bodyParser.json())
+app.use(fileUpload());
 
 db.on('error', console.error.bind(console, 'MongoDB connection error:'))
 

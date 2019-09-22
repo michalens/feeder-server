@@ -28,17 +28,33 @@ const rssFeedSchema = new Schema({
             type: String,
             required: false
         },
-        items: {
-            type: Array,
-            required: false
-        },
         parentFolder: { type: Schema.Types.ObjectId, ref: 'Folder' },
-
+        items: [{ type: Schema.Types.ObjectId, ref: 'FeedItem' }]
     })
 
-const RSSFeed = mongoose.model('RSSFeed', rssFeedSchema);
-const Folder = mongoose.model('Folder', folderSchema);
+const feedItemSchema = new Schema({
+    title: {
+        type: String,
+        required: true
+    },
+    link: {
+        type: String,
+        required: true
+    },
+    pubDate: {
+        type: String,
+        required: true
+    },
+    content: String,
+})
+
+const Folder = mongoose.model('Folder', folderSchema)
+const RSSFeed = mongoose.model('RSSFeed', rssFeedSchema)
+const FeedItem = mongoose.model('FeedItem', feedItemSchema)
+
+
 module.exports = {
+    Folder,
     RSSFeed,
-    Folder
+    FeedItem
 }

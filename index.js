@@ -3,8 +3,6 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const fileUpload = require('express-fileupload');
 
-const rssParser = require('./rss-parser.js')
-
 const rssRouter = require('./routes/rss-router')
 
 const db = require('./db')

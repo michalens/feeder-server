@@ -46,6 +46,7 @@ const feedItemSchema = new Schema({
         required: true
     },
     content: String,
+    author: String
 })
 
 const Folder = mongoose.model('Folder', folderSchema)

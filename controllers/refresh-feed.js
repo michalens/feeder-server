@@ -41,35 +41,38 @@ function refreshFeed() {
 }
 
 function itemsComparison (prevFeed, newFeed) {
-	if (prevFeed.items = [] || !prevFeed.items) {
-		console.log("adding")
-		newFeed.items.forEach(item => {
-			let { pubDate, title, content, link } = item 
-			if (!link) {
-				link = item.guid
-			}
-			const feedItem = new FeedItem({
-				pubDate: pubDate,
-				title: title,
-				link: link,
-				content: content
-			})
-			feedItem.save((err, feedItem) => {
-				if(err){
-				    console.log("Something went wrong,", err)
-				    return
-				}
-				RSSFeed.findByIdAndUpdate(prevFeed._id, { $push: {items: feedItem._id} }, (err, res)=>{
-					if (err) {console.log('err',err)}
-					res.save()
+	newFeed.items.forEach(item => {
+		let { pubDate, title, content, link, author } = item 
+		if (!link) {
+			link = item.guid
+		}
+		FeedItem.findOne({link: link, pubDate: pubDate}, (err, res) => {
+			if (err) console.log(err)
+			if(!res) {
+				addFeedItem(prevFeed, {
+					pubDate,
+					title,
+					link,
+					content,
+					author
 				})
-			})
+			}
 		})
-	} else {
-		console.log(prevFeed.items)
+	})
+}
 
-	}	  
-
+function addFeedItem (feed, itemObj) {
+	const feedItem = new FeedItem(itemObj)
+	feedItem.save((err, feedItemRes) => {
+		if(err){
+		    console.log("Something went wrong,", err)
+		    return
+		}
+		RSSFeed.findByIdAndUpdate(feed._id, { $push: {items: feedItemRes._id} }, (err, res)=>{
+			if (err) {console.log('err',err)}
+			res.save()
+		})
+	})
 }
 
 async function rssParser(url) {

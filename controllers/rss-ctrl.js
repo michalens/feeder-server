@@ -1,6 +1,7 @@
 const Parser = require('rss-parser');
 const rssParser = new Parser();
 const RSSFeed = require('../models/rss-model').RSSFeed
+const Folder = require('../models/rss-model').Folder
 
 createFeed =  async (req, res) => {
 
@@ -124,6 +125,37 @@ getFeeds = async (req, res) => {
         }
         return res.status(200).json({ success: true, data: feeds })
     }).catch(err => console.log(err))
+}
+
+getFeeds = async (req, res) => {
+    await Folder.find({parentFolder: null})
+        .populate({path: 'folders', populate: {path: 'folders', populate: {path: 'feeds'}}})
+        .populate('feeds')
+        .exec((err, folders) => {
+            if (err) {
+                return res.status(400).json({ success: false, error: err })
+            }
+            if (!folders.length) {
+                return res
+                    .status(404)
+                    .json({ success: false, error: `Feed not found` })
+            }
+
+            if (folders.folders) {
+                folders
+            }
+            RSSFeed.find({parentFolder: null}, (err, feeds) => {
+                if (err) {
+                    return res.status(400).json({ success: false, error: err })
+                }
+                if (!feeds.length) {
+                    return res
+                        .status(404)
+                        .json({ success: false, error: `Feed not found` })
+                }
+                return res.status(200).json({ success: true, data: {folders, feeds} })
+            })
+        })
 }
 
 module.exports = {

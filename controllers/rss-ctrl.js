@@ -113,24 +113,10 @@ getFeedById = async (req, res) => {
     }).catch(err => console.log(err))
 }
 
-getFeeds = async (req, res) => {
-    await RSSFeed.find({}, (err, feeds) => {
-        if (err) {
-            return res.status(400).json({ success: false, error: err })
-        }
-        if (!feeds.length) {
-            return res
-                .status(404)
-                .json({ success: false, error: `Feed not found` })
-        }
-        return res.status(200).json({ success: true, data: feeds })
-    }).catch(err => console.log(err))
-}
 
 getFeeds = async (req, res) => {
     await Folder.find({parentFolder: null})
-        .populate({path: 'folders', populate: {path: 'folders', populate: {path: 'feeds'}}})
-        .populate('feeds')
+        .populate({path: 'folders feeds', populate: {path: 'folders feeds', populate: {path: 'folders feeds', populate: {path: 'folders feeds'}}}})
         .exec((err, folders) => {
             if (err) {
                 return res.status(400).json({ success: false, error: err })
@@ -141,9 +127,6 @@ getFeeds = async (req, res) => {
                     .json({ success: false, error: `Feed not found` })
             }
 
-            if (folders.folders) {
-                folders
-            }
             RSSFeed.find({parentFolder: null}, (err, feeds) => {
                 if (err) {
                     return res.status(400).json({ success: false, error: err })

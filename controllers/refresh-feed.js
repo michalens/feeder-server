@@ -1,6 +1,6 @@
 const Parser = require('rss-parser')
 const parser = new Parser()
-
+const slugify = require('slugify')
 const RSSFeed = require('../models/rss-model').RSSFeed
 const FeedItem = require('../models/rss-model').FeedItem
 
@@ -25,7 +25,7 @@ function refreshFeed() {
 			}
 			if (parsedFeed.title && feed.title !== parsedFeed.title) {
 				console.log(feed.title, parsedFeed.title)
-				RSSFeed.findOneAndUpdate({ feedUrl: feed.feedUrl }, { title: parsedFeed.title }, (err, res) =>{
+				RSSFeed.findOneAndUpdate({ feedUrl: feed.feedUrl }, { title: parsedFeed.title, slug: slugify(parsedFeed.title) }, (err, res) =>{
 					if (err) {
 						console.log(err)
 					}

@@ -6,6 +6,10 @@ const folderSchema = new Schema({
         type: String, 
         required: true 
     },
+    slug: {
+        type: String, 
+        required: true
+    },
     parentFolder: { type: Schema.Types.ObjectId, ref: 'Folder' },
     folders: [{ type: Schema.Types.ObjectId, ref: 'Folder' }],
     feeds: [{ type: Schema.Types.ObjectId, ref: 'RSSFeed' }]
@@ -19,6 +23,10 @@ const rssFeedSchema = new Schema({
         title: {
         	type: String,
         	required: true
+        },
+        slug: {
+            type: String, 
+            required: true
         },
         link: {
             type: String,
@@ -35,6 +43,10 @@ const rssFeedSchema = new Schema({
 const feedItemSchema = new Schema({
     title: {
         type: String,
+        required: true
+    },
+    slug: {
+        type: String, 
         required: true
     },
     link: {

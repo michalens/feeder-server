@@ -1,5 +1,7 @@
-const Parser = require('rss-parser');
-const rssParser = new Parser();
+const Parser = require('rss-parser')
+const rssParser = new Parser()
+const slugify = require('slugify')
+
 const RSSFeed = require('../models/rss-model').RSSFeed
 const Folder = require('../models/rss-model').Folder
 
@@ -22,7 +24,12 @@ createFeed =  async (req, res) => {
 
     const parsedRss = await rssParser.parseURL(feedUrl)
 
-    const feed = new RSSFeed(parsedRss)
+    const feed = new RSSFeed({
+        title,
+        slug: slugify(title),
+        feedUrl,
+        link
+    })
 
     if (!feed) {
         return res.status(400).json({ success: false, error: err })

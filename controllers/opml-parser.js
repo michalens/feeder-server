@@ -2,6 +2,7 @@ const convert = require('xml-js')
 const RSSFeed = require('../models/rss-model').RSSFeed
 const Folder = require('../models/rss-model').Folder
 const fs = require('fs')
+const slugify = require('slugify')
 
 function opmlUpload(req, res) {
   	const opmlFile = req.files.file;
@@ -42,7 +43,7 @@ function outlineLoop(obj, parentId) {
 				const folder = new Folder({ 
 					title: item._attributes.title, 
 					parentFolder: parentId,
-
+					slug: slugify(item._attributes.title)
 				})
 				folder.save((err, folder) => {
 					if(err){
@@ -61,6 +62,7 @@ function outlineLoop(obj, parentId) {
 				
 				const feed = new RSSFeed({
 					title,
+					slug: slugify(title),
 					feedUrl: xmlUrl,
 					link: htmlUrl,
 					parentFolder: parentId

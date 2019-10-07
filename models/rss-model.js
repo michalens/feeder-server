@@ -45,10 +45,6 @@ const feedItemSchema = new Schema({
         type: String,
         required: true
     },
-    slug: {
-        type: String, 
-        required: true
-    },
     link: {
         type: String,
         required: true

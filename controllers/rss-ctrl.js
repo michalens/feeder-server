@@ -106,7 +106,9 @@ deleteFeed = async (req, res) => {
 }
 
 getFeedById = async (req, res) => {
-    await RSSFeed.findOne({ _id: req.params.id }, (err, feed) => {
+    await RSSFeed.findOne({ _id: req.params.id })
+        .populate('items')
+        .exec((err, feed) => {
         if (err) {
             return res.status(400).json({ success: false, error: err })
         }
@@ -117,7 +119,7 @@ getFeedById = async (req, res) => {
                 .json({ success: false, error: `Feed not found` })
         }
         return res.status(200).json({ success: true, data: feed })
-    }).catch(err => console.log(err))
+    })
 }
 
 

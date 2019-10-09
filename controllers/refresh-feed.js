@@ -15,7 +15,6 @@ function refreshFeed() {
 			const parsedFeed = await rssParser(feed.feedUrl)
 
 			if (parsedFeed.link && feed.link !== parsedFeed.link) {
-				console.log(feed.link, parsedFeed.link)
 				RSSFeed.findOneAndUpdate({ feedUrl: feed.feedUrl }, { link: parsedFeed.link }, (err, res) =>{
 					if (err) {
 						console.log(err)
@@ -24,7 +23,6 @@ function refreshFeed() {
 				}) 
 			}
 			if (parsedFeed.title && feed.title !== parsedFeed.title) {
-				console.log(feed.title, parsedFeed.title)
 				RSSFeed.findOneAndUpdate({ feedUrl: feed.feedUrl }, { title: parsedFeed.title, slug: slugify(parsedFeed.title) }, (err, res) =>{
 					if (err) {
 						console.log(err)
@@ -33,7 +31,18 @@ function refreshFeed() {
 				}) 
 			}
 
-			itemsComparison(feed, parsedFeed)
+			if (!parsedFeed.link && !parsedFeed.title) {
+				const deletedTitle = feed.title + ' [DeletedFeed]'
+				RSSFeed.findOneAndUpdate({ feedUrl: feed.feedUrl }, { title: deletedTitle }, (err, res) =>{
+					if (err) {
+						console.log(err)
+					}
+					res.save()
+				}) 
+			} else {
+				itemsComparison(feed, parsedFeed)
+			}
+
 
 		})
 
@@ -41,6 +50,9 @@ function refreshFeed() {
 }
 
 function itemsComparison (prevFeed, newFeed) {
+	if (!newFeed.items || newFeed.items === []) {
+		console.log(prevFeed)
+	}
 	newFeed.items.forEach(item => {
 		let { pubDate, title, content, link, author } = item 
 		if (!link) {
